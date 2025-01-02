@@ -655,3 +655,93 @@ type IntxPosition struct {
 type IntxSummary struct {
 	AggregatedPnl Amount `json:"aggregated_pnl"`
 }
+
+type SocketRequest struct {
+	Type       string   `json:"type"`
+	Channel    string   `json:"channel"`
+	ProductIds []string `json:"product_ids,omitempty"`
+	Jwt        *string  `json:"jwt,omitempty"`
+}
+
+type SocketResponse[T any] struct {
+	Channel     string    `json:"channel"`
+	ClientId    string    `json:"client_id,omitempty"`
+	Timestamp   time.Time `json:"timestamp,omitempty"`
+	SequenceNum int64     `json:"sequence_num,omitempty"`
+	Events      []T       `json:"events,omitempty"`
+}
+
+type HeartbeatEvent struct {
+	CurrentTime      string `json:"current_time"`
+	HeartbeatCounter string `json:"heartbeat_counter"`
+}
+
+type CandleEvent struct {
+	Type    string   `json:"type"`
+	Candles []Candle `json:"candles"`
+}
+
+type MarketTradeEvent struct {
+	Type   string  `json:"type"`
+	Trades []Trade `json:"trades"`
+}
+
+type StatusEvent struct {
+	Type     string `json:"type"`
+	Products []struct {
+		ProductType    string `json:"product_type"`
+		Id             string `json:"id"`
+		BaseCurrency   string `json:"base_currency"`
+		QuoteCurrency  string `json:"quote_currency"`
+		BaseIncrement  string `json:"base_increment"`
+		QuoteIncrement string `json:"quote_increment"`
+		DisplayName    string `json:"display_name"`
+		Status         string `json:"status"`
+		StatusMessage  string `json:"status_message"`
+		MinMarketFunds string `json:"min_market_funds"`
+	} `json:"products"`
+}
+
+type TickerEvent struct {
+	Type    string `json:"type"`
+	Tickers []struct {
+		Type                     string `json:"type"`
+		ProductId                string `json:"product_id"`
+		Price                    string `json:"price"`
+		Volume24Hour             string `json:"volume_24_h"`
+		Low24Hour                string `json:"low_24_h"`
+		High24Hour               string `json:"high_24_h"`
+		Low52Week                string `json:"low_52_w"`
+		High52Week               string `json:"high_52_w"`
+		PricePercentChange24Hour string `json:"price_percent_chg_24_h"`
+		BestBid                  string `json:"best_bid"`
+		BestBidQuantity          string `json:"best_bid_quantity"`
+		BestAsk                  string `json:"best_ask"`
+		BestAskQuantity          string `json:"best_ask_quantity"`
+	} `json:"tickers"`
+}
+
+type Level2Event struct {
+	Type      string `json:"type"`
+	ProductId string `json:"product_id"`
+	Updates   []struct {
+		Side        string `json:"side"`
+		EventTime   string `json:"event_time"`
+		PriceLevel  string `json:"price_level"`
+		NewQuantity string `json:"new_quantity"`
+	} `json:"updates"`
+}
+
+type UserEvent struct {
+	Type      string  `json:"type"`
+	Orders    []Order `json:"orders"`
+	Positions struct {
+		PerpetualFuturesPositions []PerpPosition    `json:"perpetual_futures_positions"`
+		ExpiringFuturesPositions  []FuturesPosition `json:"expiring_futures_positions"`
+	} `json:"positions"`
+}
+
+type FuturesBalanceSummaryEvent struct {
+	Type              string         `json:"type"`
+	FcmBalanceSummary BalanceSummary `json:"fcm_balance_summary"`
+}

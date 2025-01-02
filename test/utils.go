@@ -37,3 +37,9 @@ func setupClient() (client.RestClient, error) {
 	restClient := client.NewRestClient(credentials, httpClient)
 	return restClient, nil
 }
+
+func setupSocketClient() client.WebSocketClient {
+	cfg := client.DefaultDialerConfig(client.DefaultMarketDataEndpoint)
+	socketClient := client.NewWebSocketClient(cfg)
+	return socketClient
+}
