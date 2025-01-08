@@ -108,14 +108,15 @@ func (w *webSocketImpl) Listen(ctx context.Context, handleMessage core.OnWebSock
 		for {
 			select {
 			case <-ctx.Done():
-				errChan <- ctx.Err()
+				errChan <- fmt.Errorf("context done: %w", ctx.Err())
 				return
 			default:
 				// Read next message from the gorilla/websocket connection.
 				msgType, message, err := w.conn.ReadMessage()
 				if err != nil {
 					errChan <- fmt.Errorf("failed to read message: %w", err)
-					return
+					// do not return from the goroutine, we want the connection to stay open
+					continue
 				}
 
 				// You can check message types if needed (e.g., TextMessage vs. BinaryMessage).
